@@ -90,6 +90,15 @@ While all other options and parameters are optional, with sane defaults, and can
 </div>
 ```
 
+You can also specify a `data-smooth` attribute and set it to 1 in order for a smoother transform animation by applying a rotate(0.01deg) transform on top of Translate3D, wich should force subpixel rendering. This can be useful on large background images in my testings.
+
+```html
+<div id="scene">
+  <div data-depth="0.2" data-smooth="1">My smooth Layer!</div>
+  <div data-depth="0.6">My second Layer!</div>
+</div>
+```
+
 ## 1.3 Run Parallax
 
 As soon as your DOM is ready and loaded, you can create a new Parallax.js instance, providing your scene element as first parameter.

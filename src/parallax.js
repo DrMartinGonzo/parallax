@@ -196,6 +196,7 @@ class Parallax {
     this.enabled = false
     this.depthsX = []
     this.depthsY = []
+    this.smooth = []
     this.raf = null
 
     this.bounds = null
@@ -294,6 +295,7 @@ class Parallax {
 
     this.depthsX = []
     this.depthsY = []
+    this.smooth = []
 
     for (let index = 0; index < this.layers.length; index++) {
       let layer = this.layers[index]
@@ -308,8 +310,10 @@ class Parallax {
       layer.style.top = 0
 
       let depth = helpers.data(layer, 'depth') || 0
+      let smooth = helpers.data(layer, 'smooth') || 0
       this.depthsX.push(helpers.data(layer, 'depth-x') || depth)
       this.depthsY.push(helpers.data(layer, 'depth-y') || depth)
+      this.smooth.push(smooth)
     }
   }
 
@@ -418,11 +422,15 @@ class Parallax {
     this.updateDimensions()
   }
 
-  setPosition(element, x, y) {
+  setPosition(element, x, y, isSmoothTransform) {
     x = x.toFixed(this.precision) + 'px'
     y = y.toFixed(this.precision) + 'px'
     if (this.transform3DSupport) {
-      helpers.css(element, 'transform', 'translate3d(' + x + ',' + y + ',0)')
+      let transformString = 'translate3d(' + x + ',' + y + ',0)'
+      if(isSmoothTransform) {
+        transformString += ' rotate(0.01deg)'
+      }
+      helpers.css(element, 'transform', transformString)
     } else if (this.transform2DSupport) {
       helpers.css(element, 'transform', 'translate(' + x + ',' + y + ')')
     } else {
@@ -487,9 +495,10 @@ class Parallax {
       let layer = this.layers[index],
           depthX = this.depthsX[index],
           depthY = this.depthsY[index],
+          isSmoothTransform = this.smooth[index],
           xOffset = this.velocityX * (depthX * (this.invertX ? -1 : 1)),
           yOffset = this.velocityY * (depthY * (this.invertY ? -1 : 1))
-      this.setPosition(layer, xOffset, yOffset)
+      this.setPosition(layer, xOffset, yOffset, isSmoothTransform)
     }
     this.raf = rqAnFr(this.onAnimationFrame)
   }
