@@ -6,9 +6,6 @@
 *              If no gyroscope is available, the cursor position is used.
 */
 
-const rqAnFr = require('raf')
-const objectAssign = require('object-assign')
-
 const helpers = {
   propertyCache: {},
   vendors: [null, ['-webkit-','webkit'], ['-moz-','Moz'], ['-o-','O'], ['-ms-','ms']],
@@ -185,7 +182,7 @@ class Parallax {
       }
     }
 
-    objectAssign(this, DEFAULTS, data, options)
+    Object.assign(this, DEFAULTS, data, options)
 
     if(!this.inputElement) {
       this.inputElement = this.element
@@ -366,7 +363,7 @@ class Parallax {
     }
 
     window.addEventListener('resize', this.onWindowResize)
-    this.raf = rqAnFr(this.onAnimationFrame)
+    this.raf = requestAnimationFrame(this.onAnimationFrame)
   }
 
   disable() {
@@ -384,7 +381,7 @@ class Parallax {
     }
 
     window.removeEventListener('resize', this.onWindowResize)
-    rqAnFr.cancel(this.raf)
+    cancelAnimationFrame(this.raf)
   }
 
   calibrate(x, y) {
@@ -500,7 +497,7 @@ class Parallax {
           yOffset = this.velocityY * (depthY * (this.invertY ? -1 : 1))
       this.setPosition(layer, xOffset, yOffset, isSmoothTransform)
     }
-    this.raf = rqAnFr(this.onAnimationFrame)
+    this.raf = requestAnimationFrame(this.onAnimationFrame)
   }
 
   rotate(beta, gamma){
